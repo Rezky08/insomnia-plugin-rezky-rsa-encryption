@@ -352,7 +352,7 @@ module.exports.requestHooks = [
             let bodyText = request.getBody().text
             bodyText = replaceInnermostValue(context, bodyText, execHandlerFunc)
 
-            let body = JSON.parse(bodyText)
+            let body = JSON.parse(bodyText??"{}")
 
             const signatureFlag = request.getHeader(signatureFlagKey)
             if (!!signatureFlag){
