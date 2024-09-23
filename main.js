@@ -115,7 +115,7 @@ const handlerMap = {
 
 function replaceInnermostValue(ctx, input, replacer) {
     while (true) {
-        const match = input.match(/(\[\%[^\[\]]+\%\])/);
+        const match = input?.match(/(\[\%[^\[\]]+\%\])/);
 
         if (!match) {
             break;
