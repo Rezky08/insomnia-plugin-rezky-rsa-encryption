@@ -153,7 +153,7 @@ const execHandlerParams = (ctx, keyword, handler, plainParams) => {
     return handler(ctx, params)
 }
 
-const bufferToJsonObj = buf => JSON.parse(buf.toString('utf-8'));
+    const bufferToJsonObj = buf => JSON.parse(buf.toString('utf-8'));
 const jsonObjToBuffer = obj => Buffer.from(JSON.stringify(obj), 'utf-8');
 
 module.exports.templateTags = [
@@ -405,14 +405,14 @@ module.exports.requestHooks = [
 module.exports.responseHooks = [
     async context => {
         try {
-            const resp = bufferToJsonObj(context.response.getBody());
+            const resp = bufferToJsonObj(await context.response.getBody());
             if (Object.keys(chainToResponseObject).length>0){
                 // Modify
                 resp.__request = chainToResponseObject;
             }
             context.response.setBody(jsonObjToBuffer(resp));
-        } catch {
-            // no-op
+        } catch (e) {
+            console.error(e)
         }
     }
 ]
