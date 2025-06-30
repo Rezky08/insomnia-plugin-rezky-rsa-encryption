@@ -349,10 +349,14 @@ module.exports.requestHooks = [
         try {
             const signatureFlagKey = 'SIGNATURE-FLAG'
             const request = context.request
-            let bodyText = request.getBody().text
+            let bodyText = request.getBody()?.text??'{}'
             bodyText = replaceInnermostValue(context, bodyText, execHandlerFunc)
 
-            let body = JSON.parse(bodyText??"{}")
+            let body = '';
+            try {
+                body = JSON.parse(bodyText??"{}")
+            } catch (error) {
+            }
 
             const signatureFlag = request.getHeader(signatureFlagKey)
             if (!!signatureFlag){
@@ -391,10 +395,16 @@ module.exports.requestHooks = [
                 }
 
             }
-            context.request.setBody({
+
+            let forwardRequest = {
                 ...request.getBody(),
-                text: JSON.stringify(body),
-            });
+            };
+
+            if(!!body){
+                forwardRequest = {...forwardRequest,text: JSON.stringify(body)};
+            }
+
+            context.request.setBody(forwardRequest);
 
         } catch (e) {
             console.error(e)
